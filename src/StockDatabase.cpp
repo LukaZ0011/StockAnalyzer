@@ -69,6 +69,53 @@ void StockDatabase::loadData(const std::string &filename)
         tickerDateMap[record.ticker][record.date] = record;
     }
 }
+
+void StockDatabase::addStockRecord(const StockData &record)
+{
+    // Add to main data vector
+    data.push_back(record);
+
+    // Update maps
+    tickerMap[record.ticker].push_back(record);
+    dateMap[record.date].push_back(record);
+    tickerDateMap[record.ticker][record.date] = record;
+
+    std::cout << "Added stock data for " << record.ticker << " on " << record.date << "\n";
+}
+
+// Function to delete a ticker and all its associated records
+void StockDatabase::deleteTicker(const std::string &ticker)
+{
+    if (tickerMap.find(ticker) == tickerMap.end())
+    {
+        std::cout << "Ticker " << ticker << " not found.\n";
+        return;
+    }
+
+    // Remove from data vector
+    data.erase(std::remove_if(data.begin(), data.end(),
+                              [&ticker](const StockData &record)
+                              { return record.ticker == ticker; }),
+               data.end());
+
+    // Remove from tickerMap
+    tickerMap.erase(ticker);
+
+    // Remove from dateMap
+    for (auto &entry : dateMap)
+    {
+        entry.second.erase(std::remove_if(entry.second.begin(), entry.second.end(),
+                                          [&ticker](const StockData &record)
+                                          { return record.ticker == ticker; }),
+                           entry.second.end());
+    }
+
+    // Remove from tickerDateMap
+    tickerDateMap.erase(ticker);
+
+    std::cout << "Deleted all records for ticker: " << ticker << "\n";
+}
+
 // Query 1: Get data by date
 std::vector<StockData> StockDatabase::getDataByDate(const std::string &date)
 {

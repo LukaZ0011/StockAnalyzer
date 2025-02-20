@@ -7,7 +7,7 @@
 #include <set>
 #include <queue>
 
-// Comparator for sorting stocks by volume (used in query 13)
+// Comparator for sorting stocks by volume (13)
 struct VolumeComparator
 {
     bool operator()(const StockData &a, const StockData &b)
@@ -16,7 +16,7 @@ struct VolumeComparator
     }
 };
 
-// Comparator for sorting stocks by closing price (used in query 14)
+// Comparator for sorting stocks by closing price (14)
 struct ClosePriceComparator
 {
     bool operator()(const StockData &a, const StockData &b)
@@ -25,7 +25,7 @@ struct ClosePriceComparator
     }
 };
 
-// Comparator for sorting stocks by dividends (used in query 15)
+// Comparator for sorting stocks by dividends (query 15)
 struct DividendsComparator
 {
     bool operator()(const StockData &a, const StockData &b)
@@ -44,6 +44,8 @@ private:
 
 public:
     void loadData(const std::string &filename);
+    void addStockRecord(const StockData &record);
+    void deleteTicker(const std::string &ticker);
     std::vector<StockData> getDataByDate(const std::string &date);
     double getAverageClosePrice(const std::string &ticker);
     double getHighestPriceInPeriod(const std::string &ticker, const std::string &startDate, const std::string &endDate);
