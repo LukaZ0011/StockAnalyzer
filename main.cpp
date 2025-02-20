@@ -46,7 +46,6 @@ int main()
         displayMenu();
         std::cin >> choice;
 
-        // Početak mjerenja vremena
         auto start = std::chrono::high_resolution_clock::now();
 
         switch (choice)
@@ -54,14 +53,14 @@ int main()
         case 1:
             std::cout << "Enter date (YYYY-MM-DD): ";
             std::cin >> date;
-            start = std::chrono::high_resolution_clock::now(); // Reset timer before query
+            start = std::chrono::high_resolution_clock::now();
             result = db.getDataByDate(date);
             break;
 
         case 2:
             std::cout << "Enter ticker: ";
             std::cin >> ticker;
-            start = std::chrono::high_resolution_clock::now(); // Reset timer before query
+            start = std::chrono::high_resolution_clock::now();
             value = db.getAverageClosePrice(ticker);
             break;
 
@@ -72,12 +71,12 @@ int main()
             std::cin >> startDate;
             std::cout << "Enter end date (YYYY-MM-DD): ";
             std::cin >> endDate;
-            start = std::chrono::high_resolution_clock::now(); // Reset timer before query
+            start = std::chrono::high_resolution_clock::now();
             value = db.getHighestPriceInPeriod(ticker, startDate, endDate);
             break;
 
         case 4:
-            start = std::chrono::high_resolution_clock::now(); // Reset timer before query
+            start = std::chrono::high_resolution_clock::now();
             {
                 auto uniqueTickers = db.getAllUniqueTickers();
                 std::cout << "Unique tickers:\n";
@@ -91,7 +90,7 @@ int main()
         case 5:
             std::cout << "Enter ticker: ";
             std::cin >> ticker;
-            start = std::chrono::high_resolution_clock::now(); // Reset timer before query
+            start = std::chrono::high_resolution_clock::now();
             if (db.doesTickerExist(ticker))
             {
                 std::cout << "Ticker " << ticker << " exists.\n";
@@ -105,7 +104,7 @@ int main()
         case 6:
             std::cout << "Enter threshold: ";
             std::cin >> threshold;
-            start = std::chrono::high_resolution_clock::now(); // Reset timer before query
+            start = std::chrono::high_resolution_clock::now();
             value = db.countDatesAboveThreshold(threshold);
             std::cout << "Number of dates with at least one stock closing above " << threshold << ": " << value << "\n";
             break;
@@ -115,21 +114,21 @@ int main()
             std::cin >> ticker;
             std::cout << "Enter date (YYYY-MM-DD): ";
             std::cin >> date;
-            start = std::chrono::high_resolution_clock::now(); // Reset timer before query
+            start = std::chrono::high_resolution_clock::now();
             value = db.getClosingPrice(ticker, date);
             break;
 
         case 8:
             std::cout << "Enter ticker: ";
             std::cin >> ticker;
-            start = std::chrono::high_resolution_clock::now(); // Reset timer before query
+            start = std::chrono::high_resolution_clock::now();
             datePricePairs = db.getDatesAndClosingPrices(ticker);
             break;
 
         case 9:
             std::cout << "Enter ticker: ";
             std::cin >> ticker;
-            start = std::chrono::high_resolution_clock::now(); // Reset timer before query
+            start = std::chrono::high_resolution_clock::now();
             value = db.getTotalVolume(ticker);
             break;
 
@@ -138,7 +137,7 @@ int main()
             std::cin >> ticker;
             std::cout << "Enter date (YYYY-MM-DD): ";
             std::cin >> date;
-            start = std::chrono::high_resolution_clock::now(); // Reset timer before query
+            start = std::chrono::high_resolution_clock::now();
             if (db.doesDataExist(ticker, date))
             {
                 std::cout << "Data exists for " << ticker << " on " << date << ".\n";
@@ -154,7 +153,7 @@ int main()
             std::cin >> ticker;
             std::cout << "Enter date (YYYY-MM-DD): ";
             std::cin >> date;
-            start = std::chrono::high_resolution_clock::now(); // Reset timer before query
+            start = std::chrono::high_resolution_clock::now();
             openClosePrices = db.getOpeningAndClosingPrices(ticker, date);
             break;
 
@@ -163,24 +162,24 @@ int main()
             std::cin >> ticker;
             std::cout << "Enter date (YYYY-MM-DD): ";
             std::cin >> date;
-            start = std::chrono::high_resolution_clock::now(); // Reset timer before query
+            start = std::chrono::high_resolution_clock::now();
             value = db.getDividend(ticker, date);
             break;
 
         case 13:
             std::cout << "Enter date (YYYY-MM-DD): ";
             std::cin >> date;
-            start = std::chrono::high_resolution_clock::now(); // Reset timer before query
+            start = std::chrono::high_resolution_clock::now();
             result = db.getTop10StocksByVolume(date);
             break;
 
         case 14:
-            start = std::chrono::high_resolution_clock::now(); // Reset timer before query
+            start = std::chrono::high_resolution_clock::now();
             result = db.getBottom5StocksByClosingPrice();
             break;
 
         case 15:
-            start = std::chrono::high_resolution_clock::now(); // Reset timer before query
+            start = std::chrono::high_resolution_clock::now();
             result = db.getTop5StocksByDividends();
             break;
 
@@ -222,7 +221,7 @@ int main()
 
         default:
             std::cout << "Invalid choice. Please try again.\n";
-            continue; // Skip timing for invalid choices
+            continue;
         }
 
         // Kraj mjerenja vremena
@@ -230,7 +229,7 @@ int main()
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
         std::cout << "Vrijeme izvršavanja upita: " << duration.count() << " ms\n";
 
-        // Ispis rezultata (ako je potrebno)
+        // Ispis rezultata
         switch (choice)
         {
         case 1:

@@ -11,7 +11,7 @@ void StockDatabase::loadData(const std::string &filename)
 {
     std::ifstream file(filename);
     std::string line;
-    std::getline(file, line); // Skip header
+    std::getline(file, line);
 
     while (std::getline(file, line))
     {
@@ -19,18 +19,16 @@ void StockDatabase::loadData(const std::string &filename)
         StockData record;
         std::string temp;
 
-        // Parse Date and Ticker (these are required fields)
         std::getline(ss, record.date, ',');
         std::getline(ss, record.ticker, ',');
 
-        // Check if the line is missing required fields
         if (record.date.empty() || record.ticker.empty())
         {
             std::cerr << "Skipping line with missing Date or Ticker: " << line << std::endl;
             continue;
         }
 
-        // Parse Open, High, Low, Close, Volume, Dividends
+        // Parse
         bool isValid = true;
         std::vector<std::string> fields = {"Open", "High", "Low", "Close", "Volume", "Dividends"};
         std::vector<double *> values = {&record.open, &record.high, &record.low, &record.close, &record.volume, &record.dividends};
@@ -56,13 +54,11 @@ void StockDatabase::loadData(const std::string &filename)
             }
         }
 
-        // Skip the line if any field is invalid
         if (!isValid)
         {
             continue;
         }
 
-        // Add the record to the database
         data.push_back(record);
         tickerMap[record.ticker].push_back(record);
         dateMap[record.date].push_back(record);
@@ -72,10 +68,8 @@ void StockDatabase::loadData(const std::string &filename)
 
 void StockDatabase::addStockRecord(const StockData &record)
 {
-    // Add to main data vector
     data.push_back(record);
 
-    // Update maps
     tickerMap[record.ticker].push_back(record);
     dateMap[record.date].push_back(record);
     tickerDateMap[record.ticker][record.date] = record;
@@ -83,7 +77,7 @@ void StockDatabase::addStockRecord(const StockData &record)
     std::cout << "Added stock data for " << record.ticker << " on " << record.date << "\n";
 }
 
-// Function to delete a ticker and all its associated records
+// Erase ticker
 void StockDatabase::deleteTicker(const std::string &ticker)
 {
     if (tickerMap.find(ticker) == tickerMap.end())
@@ -92,16 +86,13 @@ void StockDatabase::deleteTicker(const std::string &ticker)
         return;
     }
 
-    // Remove from data vector
     data.erase(std::remove_if(data.begin(), data.end(),
                               [&ticker](const StockData &record)
                               { return record.ticker == ticker; }),
                data.end());
 
-    // Remove from tickerMap
     tickerMap.erase(ticker);
 
-    // Remove from dateMap
     for (auto &entry : dateMap)
     {
         entry.second.erase(std::remove_if(entry.second.begin(), entry.second.end(),
@@ -116,12 +107,12 @@ void StockDatabase::deleteTicker(const std::string &ticker)
     std::cout << "Deleted all records for ticker: " << ticker << "\n";
 }
 
-// Query 1: Get data by date
+// Query 1:
 std::vector<StockData> StockDatabase::getDataByDate(const std::string &date)
 {
     return dateMap[date];
 }
-// Query 2: Get average closing price for a specific ticker
+// Query 2:
 double StockDatabase::getAverageClosePrice(const std::string &ticker)
 {
     double sum = 0;
@@ -133,7 +124,7 @@ double StockDatabase::getAverageClosePrice(const std::string &ticker)
     }
     return (count == 0) ? 0 : sum / count;
 }
-// Query 3: Get highest price for a specific ticker in a period
+// Query 3:
 double StockDatabase::getHighestPriceInPeriod(const std::string &ticker, const std::string &startDate, const std::string &endDate)
 {
     double highest = 0;
@@ -149,7 +140,7 @@ double StockDatabase::getHighestPriceInPeriod(const std::string &ticker, const s
     }
     return highest;
 }
-// Query 4: Get all unique tickers
+// Query 4:
 std::set<std::string> StockDatabase::getAllUniqueTickers()
 {
     std::set<std::string> uniqueTickers;
@@ -159,12 +150,12 @@ std::set<std::string> StockDatabase::getAllUniqueTickers()
     }
     return uniqueTickers;
 }
-// Query 7: Get closing price for a specific ticker on a specific date
+// Query 7:
 bool StockDatabase::doesTickerExist(const std::string &ticker)
 {
     return tickerMap.find(ticker) != tickerMap.end();
 }
-// Query 8: Count dates where closing price is above a threshold
+// Query 8:
 int StockDatabase::countDatesAboveThreshold(double threshold)
 {
     int count = 0;
@@ -181,16 +172,16 @@ int StockDatabase::countDatesAboveThreshold(double threshold)
     }
     return count;
 }
-// Query 7: Get closing price for a specific ticker on a specific date
+// Query 7:
 double StockDatabase::getClosingPrice(const std::string &ticker, const std::string &date)
 {
     if (tickerDateMap.find(ticker) != tickerDateMap.end() && tickerDateMap[ticker].find(date) != tickerDateMap[ticker].end())
     {
         return tickerDateMap[ticker][date].close;
     }
-    return -1; // Return -1 if not found
+    return -1;
 }
-// Query 8: Get dates and closing prices for a specific ticker
+// Query 8:
 std::vector<std::pair<std::string, double>> StockDatabase::getDatesAndClosingPrices(const std::string &ticker)
 {
     std::vector<std::pair<std::string, double>> result;
@@ -200,7 +191,7 @@ std::vector<std::pair<std::string, double>> StockDatabase::getDatesAndClosingPri
     }
     return result;
 }
-// Query 9: Get total trading volume for a specific ticker
+// Query 9:
 double StockDatabase::getTotalVolume(const std::string &ticker)
 {
     double totalVolume = 0;
@@ -210,30 +201,30 @@ double StockDatabase::getTotalVolume(const std::string &ticker)
     }
     return totalVolume;
 }
-// Query 10: Check if data exists for a specific date and ticker
+// Query 10:
 bool StockDatabase::doesDataExist(const std::string &ticker, const std::string &date)
 {
     return tickerDateMap.find(ticker) != tickerDateMap.end() && tickerDateMap[ticker].find(date) != tickerDateMap[ticker].end();
 }
-// Query 11: Get opening and closing prices for a specific ticker and date
+// Query 11:
 std::pair<double, double> StockDatabase::getOpeningAndClosingPrices(const std::string &ticker, const std::string &date)
 {
     if (tickerDateMap.find(ticker) != tickerDateMap.end() && tickerDateMap[ticker].find(date) != tickerDateMap[ticker].end())
     {
         return {tickerDateMap[ticker][date].open, tickerDateMap[ticker][date].close};
     }
-    return {-1, -1}; // Return {-1, -1} if not found
+    return {-1, -1};
 }
-// Query 12: Get dividend for a specific ticker on a specific date
+// Query 12:
 double StockDatabase::getDividend(const std::string &ticker, const std::string &date)
 {
     if (tickerDateMap.find(ticker) != tickerDateMap.end() && tickerDateMap[ticker].find(date) != tickerDateMap[ticker].end())
     {
         return tickerDateMap[ticker][date].dividends;
     }
-    return -1; // Return -1 if not found
+    return -1;
 }
-// Query 13: Get top 10 stocks with the highest trading volume on a specific date
+// Query 13:
 std::vector<StockData> StockDatabase::getTop10StocksByVolume(const std::string &date)
 {
     std::priority_queue<StockData, std::vector<StockData>, VolumeComparator> pq;
@@ -254,7 +245,7 @@ std::vector<StockData> StockDatabase::getTop10StocksByVolume(const std::string &
     std::reverse(result.begin(), result.end());
     return result;
 }
-// Query 14: Get 5 stocks with the lowest closing prices in the entire dataset
+// Query 14:
 std::vector<StockData> StockDatabase::getBottom5StocksByClosingPrice()
 {
     std::priority_queue<StockData, std::vector<StockData>, ClosePriceComparator> pq;
@@ -283,7 +274,7 @@ std::vector<StockData> StockDatabase::getBottom5StocksByClosingPrice()
     std::reverse(result.begin(), result.end());
     return result;
 }
-// Query 15: Maintain a list of the top 5 stocks with the highest dividends paid
+// Query 15:
 std::vector<StockData> StockDatabase::getTop5StocksByDividends()
 {
     std::priority_queue<StockData, std::vector<StockData>, DividendsComparator> pq;

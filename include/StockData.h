@@ -2,7 +2,6 @@
 
 #include <string>
 
-// Structure to store stock data
 struct StockData
 {
     std::string date;

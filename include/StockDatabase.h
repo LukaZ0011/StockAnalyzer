@@ -37,10 +37,10 @@ struct DividendsComparator
 class StockDatabase
 {
 private:
-    std::vector<StockData> data;                                                               // Stores all stock data
-    std::unordered_map<std::string, std::vector<StockData>> tickerMap;                         // Maps ticker to its records
-    std::unordered_map<std::string, std::vector<StockData>> dateMap;                           // Maps date to its records
-    std::unordered_map<std::string, std::unordered_map<std::string, StockData>> tickerDateMap; // Maps ticker and date to its record
+    std::vector<StockData> data;                                                               
+    std::unordered_map<std::string, std::vector<StockData>> tickerMap;                         
+    std::unordered_map<std::string, std::vector<StockData>> dateMap;                           
+    std::unordered_map<std::string, std::unordered_map<std::string, StockData>> tickerDateMap; 
 
 public:
     void loadData(const std::string &filename);
